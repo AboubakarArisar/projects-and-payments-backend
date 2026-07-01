@@ -12,6 +12,7 @@ const emailRouter = require("./routes/mail.route");
 const ownerRouter = require("./routes/owner.route");
 const registerUser = require("./routes/user.route");
 const authUser = require("./routes/auth.route");
+const TaskRouter = require("./routes/task.route");
 
 app.use(ProjectRouter);
 app.use(TransactionRouter);
@@ -20,5 +21,6 @@ app.use(emailRouter);
 app.use(ownerRouter);
 app.use(registerUser);
 app.use(authUser);
+app.use(TaskRouter);
 
 module.exports = app;

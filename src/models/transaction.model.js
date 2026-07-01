@@ -23,7 +23,8 @@ const TransactionEntrySchema = new mongoose.Schema({
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Member",
-    required: true,
+    // Optional: transactions are recorded at the workspace level and are not
+    // tied to a specific member in the current UI.
   },
 });
 

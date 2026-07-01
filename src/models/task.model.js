@@ -21,8 +21,7 @@ const TaskSchema = new mongoose.Schema({
   },
   project: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Member",
-    required: true,
+    ref: "Projects",
   },
 });
 module.exports = mongoose.model("Tasks", TaskSchema);
