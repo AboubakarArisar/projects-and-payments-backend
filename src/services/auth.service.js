@@ -5,17 +5,25 @@ require("dotenv").config();
 
 const loginUser = async ({ email, password }) => {
   try {
+    if (!email || !password) {
+      const error = new Error("Please enter both your email and password.");
+      error.statusCode = 400;
+      throw error;
+    }
+
     const user = await User.findOne({ email });
+    // Use the same message for "no such user" and "wrong password" so we
+    // don't leak which emails are registered — still clear to a real user.
     if (!user) {
-      const error = new Error("User not found");
-      error.statusCode = 404;
+      const error = new Error("Incorrect email or password.");
+      error.statusCode = 401;
       throw error;
     }
 
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      const error = new Error("Invalid credentials");
+      const error = new Error("Incorrect email or password.");
       error.statusCode = 401;
       throw error;
     }
