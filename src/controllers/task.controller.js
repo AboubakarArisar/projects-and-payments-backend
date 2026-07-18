@@ -21,7 +21,8 @@ const createTask = async (req, res) => {
 // Controller for getting all Tasks
 const getAllTasks = async (req, res) => {
   try {
-    const tasks = await taskServices.getAllTasks();
+    const filter = req.query.project ? { project: req.query.project } : {};
+    const tasks = await taskServices.getAllTasks(filter);
     res.json(tasks);
   } catch (error) {
     console.error(error);

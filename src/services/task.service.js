@@ -17,10 +17,10 @@ const createTask = async (name, description, deadline, status, project) => {
   }
 };
 
-// Get all Task
-const getAllTasks = async () => {
+// Get all Task (optionally filtered, e.g. by project)
+const getAllTasks = async (filter = {}) => {
   try {
-    const tasks = await TaskModel.find({});
+    const tasks = await TaskModel.find(filter);
     return tasks;
   } catch (error) {
     console.error(error);
