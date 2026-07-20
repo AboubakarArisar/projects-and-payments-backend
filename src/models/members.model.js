@@ -2,6 +2,13 @@ const mongoose = require("mongoose");
 
 const memberSchema = new mongoose.Schema(
   {
+    // Owning account — every query is scoped to this.
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     name: {
       type: String,
       required: true,
@@ -17,8 +24,7 @@ const memberSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true,
-      // You might want to add additional validation for email format
+      // Not globally unique any more — two accounts may have the same member.
     },
     phone: {
       type: String,

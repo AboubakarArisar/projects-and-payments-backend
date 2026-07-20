@@ -2,9 +2,10 @@
 
 const TransactionEntryModel = require("../models/transaction.model");
 
-const createTransactionEntry = async (title, amount, type, description) => {
+const createTransactionEntry = async (user, title, amount, type, description) => {
   try {
     const transactionEntry = new TransactionEntryModel({
+      user,
       transactionTitle: title,
       transactionAmount: amount,
       transactionType: type,
@@ -20,9 +21,9 @@ const createTransactionEntry = async (title, amount, type, description) => {
   }
 };
 
-const getAllTransactionEntries = async () => {
+const getAllTransactionEntries = async (user) => {
   try {
-    const transactions = await TransactionEntryModel.find({});
+    const transactions = await TransactionEntryModel.find({ user });
     return transactions;
   } catch (error) {
     console.error(error);
@@ -30,7 +31,16 @@ const getAllTransactionEntries = async () => {
   }
 };
 
+const deleteTransactionEntry = async (id, user) => {
+  const deleted = await TransactionEntryModel.findOneAndDelete({ _id: id, user });
+  if (!deleted) {
+    throw new Error("Transaction not found");
+  }
+  return { message: "Transaction deleted successfully" };
+};
+
 module.exports = {
   createTransactionEntry,
   getAllTransactionEntries,
+  deleteTransactionEntry,
 };

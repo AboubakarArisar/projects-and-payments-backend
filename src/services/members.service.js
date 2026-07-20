@@ -1,9 +1,10 @@
 const Member = require("../models/members.model");
 
-// Create a new member
-const addMember = async (teamMemberData) => {
+// Every function takes the owning userId — members never cross accounts.
+
+const addMember = async (user, teamMemberData) => {
   try {
-    const newMember = await Member.create(teamMemberData);
+    const newMember = await Member.create({ ...teamMemberData, user });
     return newMember;
   } catch (error) {
     console.error(error);
@@ -11,10 +12,9 @@ const addMember = async (teamMemberData) => {
   }
 };
 
-// Get all members
-const getMembers = async () => {
+const getMembers = async (user) => {
   try {
-    const members = await Member.find({});
+    const members = await Member.find({ user });
     return members;
   } catch (error) {
     console.error(error);
@@ -22,10 +22,9 @@ const getMembers = async () => {
   }
 };
 
-// Get a specific member by ID
-const getMemberById = async (memberId) => {
+const getMemberById = async (memberId, user) => {
   try {
-    const member = await Member.findById(memberId);
+    const member = await Member.findOne({ _id: memberId, user });
 
     if (!member) {
       throw new Error("Team member not found");
@@ -34,15 +33,15 @@ const getMemberById = async (memberId) => {
     return member;
   } catch (error) {
     console.error(error);
+    if (error.message === "Team member not found") throw error;
     throw new Error("Error fetching team member by ID");
   }
 };
 
-// Update a member by ID
-const updateMemberById = async (memberId, updatedData) => {
+const updateMemberById = async (memberId, user, updatedData) => {
   try {
-    const updatedMember = await Member.findByIdAndUpdate(
-      memberId,
+    const updatedMember = await Member.findOneAndUpdate(
+      { _id: memberId, user },
       updatedData,
       { new: true }
     );
@@ -54,14 +53,14 @@ const updateMemberById = async (memberId, updatedData) => {
     return updatedMember;
   } catch (error) {
     console.error(error);
+    if (error.message === "Team member not found") throw error;
     throw new Error("Error updating team member by ID");
   }
 };
 
-// Delete a member by ID
-const deleteMemberById = async (memberId) => {
+const deleteMemberById = async (memberId, user) => {
   try {
-    const deletedMember = await Member.findByIdAndDelete(memberId);
+    const deletedMember = await Member.findOneAndDelete({ _id: memberId, user });
 
     if (!deletedMember) {
       throw new Error("Team member not found");
@@ -70,6 +69,7 @@ const deleteMemberById = async (memberId) => {
     return { message: "Team member deleted successfully" };
   } catch (error) {
     console.error(error);
+    if (error.message === "Team member not found") throw error;
     throw new Error("Error deleting team member by ID");
   }
 };

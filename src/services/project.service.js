@@ -1,16 +1,13 @@
 const ProjectModel = require("../models/Project.model");
 const TaskModel = require("../models/task.model");
 
-// Create a new project
-const createProject = async (
-  name,
-  startDate,
-  deadline,
-  description,
-  payment
-) => {
+// Every function takes the owning userId — a project is only ever reachable
+// by the account that created it.
+
+const createProject = async (user, name, startDate, deadline, description, payment) => {
   try {
     const createdProject = await ProjectModel.create({
+      user,
       name,
       startDate,
       deadline,
@@ -24,10 +21,9 @@ const createProject = async (
   }
 };
 
-// Get all projects
-const getAllProjects = async () => {
+const getAllProjects = async (user) => {
   try {
-    const projects = await ProjectModel.find({});
+    const projects = await ProjectModel.find({ user });
     return projects;
   } catch (error) {
     console.error(error);
@@ -35,10 +31,9 @@ const getAllProjects = async () => {
   }
 };
 
-// Get a specific project by ID
-const getProjectById = async (projectId) => {
+const getProjectById = async (projectId, user) => {
   try {
-    const project = await ProjectModel.findById(projectId);
+    const project = await ProjectModel.findOne({ _id: projectId, user });
 
     if (!project) {
       throw new Error("Project not found");
@@ -47,15 +42,15 @@ const getProjectById = async (projectId) => {
     return project;
   } catch (error) {
     console.error(error);
+    if (error.message === "Project not found") throw error;
     throw new Error("Error fetching project by ID");
   }
 };
 
-// Update a project by ID
-const updateProjectById = async (projectId, updatedData) => {
+const updateProjectById = async (projectId, user, updatedData) => {
   try {
-    const updatedProject = await ProjectModel.findByIdAndUpdate(
-      projectId,
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: projectId, user },
       updatedData,
       { new: true }
     );
@@ -67,33 +62,37 @@ const updateProjectById = async (projectId, updatedData) => {
     return updatedProject;
   } catch (error) {
     console.error(error);
+    if (error.message === "Project not found") throw error;
     throw new Error("Error updating project by ID");
   }
 };
 
-// Delete a project by ID
-const deleteProjectById = async (projectId) => {
+const deleteProjectById = async (projectId, user) => {
   try {
-    const deletedProject = await ProjectModel.findByIdAndDelete(projectId);
+    const deletedProject = await ProjectModel.findOneAndDelete({
+      _id: projectId,
+      user,
+    });
 
     if (!deletedProject) {
       throw new Error("Project not found");
     }
 
     // Cascade: remove the project's tasks so none are left orphaned.
-    await TaskModel.deleteMany({ project: projectId });
+    await TaskModel.deleteMany({ project: projectId, user });
 
     return { message: "Project deleted successfully" };
   } catch (error) {
     console.error(error);
+    if (error.message === "Project not found") throw error;
     throw new Error("Error deleting project by ID");
   }
 };
 
-const updateStatus = async (projectId, newStatus) => {
+const updateStatus = async (projectId, user, newStatus) => {
   try {
-    const updatedProject = await ProjectModel.findByIdAndUpdate(
-      projectId,
+    const updatedProject = await ProjectModel.findOneAndUpdate(
+      { _id: projectId, user },
       { status: newStatus },
       { new: true }
     );
@@ -105,6 +104,7 @@ const updateStatus = async (projectId, newStatus) => {
     return updatedProject;
   } catch (error) {
     console.error(error);
+    if (error.message === "Project not found") throw error;
     throw new Error("Error updating project status by ID");
   }
 };

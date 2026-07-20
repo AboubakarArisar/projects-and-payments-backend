@@ -6,6 +6,7 @@ const createTask = async (req, res) => {
   try {
     const { name, description, deadline, status, project } = req.body;
     const createdTask = await taskServices.createTask(
+      req.userId,
       name,
       description,
       deadline,
@@ -22,7 +23,8 @@ const createTask = async (req, res) => {
 // Controller for getting all Tasks
 const getAllTasks = async (req, res) => {
   try {
-    const filter = req.query.project ? { project: req.query.project } : {};
+    const filter = { user: req.userId };
+    if (req.query.project) filter.project = req.query.project;
     const tasks = await taskServices.getAllTasks(filter);
     res.json(tasks);
   } catch (error) {
@@ -35,7 +37,7 @@ const getAllTasks = async (req, res) => {
 const getTaskById = async (req, res) => {
   try {
     const { taskId } = req.params;
-    const task = await taskServices.getTaskById(taskId);
+    const task = await taskServices.getTaskById(taskId, req.userId);
     res.json(task);
   } catch (error) {
     console.error(error);
@@ -52,7 +54,7 @@ const updateTaskById = async (req, res) => {
   try {
     const { taskId } = req.params;
     const { name, description, deadline, status, project } = req.body;
-    const updatedTask = await taskServices.updateTaskById(taskId, {
+    const updatedTask = await taskServices.updateTaskById(taskId, req.userId, {
       name,
       description,
       deadline,
@@ -74,7 +76,7 @@ const updateTaskById = async (req, res) => {
 const deleteTaskById = async (req, res) => {
   try {
     const { taskId } = req.params;
-    const result = await taskServices.deleteTaskById(taskId);
+    const result = await taskServices.deleteTaskById(taskId, req.userId);
     res.json(result);
   } catch (error) {
     console.error(error);
@@ -90,7 +92,7 @@ const updateStatus = async (req, res) => {
   try {
     const { taskId } = req.params;
     const { status } = req.body;
-    const updatedTask = await taskServices.updateStatus(taskId, status);
+    const updatedTask = await taskServices.updateStatus(taskId, req.userId, status);
     res.json(updatedTask);
   } catch (error) {
     console.error(error);
@@ -111,7 +113,7 @@ const addComment = async (req, res) => {
       return res.status(400).json({ error: "text is required" });
     }
     const user = await User.findById(req.userId);
-    const task = await taskServices.addComment(taskId, {
+    const task = await taskServices.addComment(taskId, req.userId, {
       author: user?.username || "Unknown",
       text: text.trim(),
     });

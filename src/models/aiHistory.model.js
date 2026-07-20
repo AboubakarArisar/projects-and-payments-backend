@@ -3,6 +3,12 @@ const mongoose = require("mongoose");
 // One saved AI generation, grouped by the assistant tab it came from.
 const AiHistorySchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+      index: true,
+    },
     tab: { type: String, required: true },
     title: { type: String, default: "" },
     input: { type: String, default: "" },

@@ -5,6 +5,7 @@ const createProject = async (req, res) => {
   try {
     const { name, startDate, deadline, description, payment } = req.body;
     const createdProject = await projectServices.createProject(
+      req.userId,
       name,
       startDate,
       deadline,
@@ -21,7 +22,7 @@ const createProject = async (req, res) => {
 // Controller for getting all projects
 const getAllProjects = async (req, res) => {
   try {
-    const projects = await projectServices.getAllProjects();
+    const projects = await projectServices.getAllProjects(req.userId);
     res.json(projects);
   } catch (error) {
     console.error(error);
@@ -33,7 +34,7 @@ const getAllProjects = async (req, res) => {
 const getProjectById = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const project = await projectServices.getProjectById(projectId);
+    const project = await projectServices.getProjectById(projectId, req.userId);
     res.json(project);
   } catch (error) {
     console.error(error);
@@ -50,7 +51,7 @@ const updateProjectById = async (req, res) => {
   try {
     const { projectId } = req.params;
     const { name, startDate, deadline, description, payment } = req.body;
-    const updatedProject = await projectServices.updateProjectById(projectId, {
+    const updatedProject = await projectServices.updateProjectById(projectId, req.userId, {
       name,
       startDate,
       deadline,
@@ -72,7 +73,7 @@ const updateProjectById = async (req, res) => {
 const deleteProjectById = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const result = await projectServices.deleteProjectById(projectId);
+    const result = await projectServices.deleteProjectById(projectId, req.userId);
     res.json(result);
   } catch (error) {
     console.error(error);
@@ -91,6 +92,7 @@ const updateStatus = async (req, res) => {
 
     const updatedProject = await projectServices.updateStatus(
       projectId,
+      req.userId,
       status
     );
     res.json(updatedProject);

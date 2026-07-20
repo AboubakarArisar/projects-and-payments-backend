@@ -10,6 +10,13 @@ const CommentSchema = new mongoose.Schema(
 );
 
 const TaskSchema = new mongoose.Schema({
+  // Owning account — every query is scoped to this.
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true,
+  },
   name: {
     type: String,
     required: true,

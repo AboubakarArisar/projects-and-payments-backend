@@ -83,7 +83,7 @@ const saveHistory = async (req, res) => {
     if (!tab || data === undefined) {
       return res.status(400).json({ error: "tab and data are required" });
     }
-    res.status(201).json(await historyServices.createEntry({ tab, title, input, data }));
+    res.status(201).json(await historyServices.createEntry({ user: req.userId, tab, title, input, data }));
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to save history" });
@@ -92,7 +92,7 @@ const saveHistory = async (req, res) => {
 
 const getHistory = async (req, res) => {
   try {
-    res.json(await historyServices.getEntries(req.query.tab));
+    res.json(await historyServices.getEntries(req.userId, req.query.tab));
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to load history" });
@@ -101,7 +101,7 @@ const getHistory = async (req, res) => {
 
 const deleteHistory = async (req, res) => {
   try {
-    await historyServices.deleteEntry(req.params.id);
+    await historyServices.deleteEntry(req.params.id, req.userId);
     res.json({ success: true });
   } catch (error) {
     console.error(error);
@@ -111,7 +111,7 @@ const deleteHistory = async (req, res) => {
 
 const clearHistory = async (req, res) => {
   try {
-    await historyServices.clearEntries(req.query.tab);
+    await historyServices.clearEntries(req.userId, req.query.tab);
     res.json({ success: true });
   } catch (error) {
     console.error(error);

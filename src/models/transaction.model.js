@@ -3,6 +3,13 @@
 const mongoose = require("mongoose");
 
 const TransactionEntrySchema = new mongoose.Schema({
+  // Owning account — every query is scoped to this.
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+    index: true,
+  },
   transactionTitle: {
     type: String,
   },
