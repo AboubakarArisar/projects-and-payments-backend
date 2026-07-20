@@ -1,6 +1,14 @@
 const mongoose = require("mongoose");
 const TaskStatus = require("../constant/TaskStatus");
 
+const CommentSchema = new mongoose.Schema(
+  {
+    author: { type: String, default: "Unknown" },
+    text: { type: String, required: true },
+  },
+  { timestamps: { createdAt: true, updatedAt: false } }
+);
+
 const TaskSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -23,5 +31,6 @@ const TaskSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Projects",
   },
+  comments: [CommentSchema],
 });
 module.exports = mongoose.model("Tasks", TaskSchema);

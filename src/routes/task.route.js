@@ -19,4 +19,7 @@ router.delete("/tasks/:taskId", taskController.deleteTaskById);
 
 router.patch("/tasks/:taskId/status", taskController.updateStatus);
 
+// Add a comment to a task
+router.post("/tasks/:taskId/comments", taskController.addComment);
+
 module.exports = router;

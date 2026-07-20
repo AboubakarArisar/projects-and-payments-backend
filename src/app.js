@@ -14,14 +14,19 @@ const registerUser = require("./routes/user.route");
 const authUser = require("./routes/auth.route");
 const TaskRouter = require("./routes/task.route");
 const AiRouter = require("./routes/ai.route");
+const auth = require("./middlewares/auth");
 
+// Public routes — no token required (sign in / sign up / availability checks).
+app.use(authUser);
+app.use(registerUser);
+app.use(ownerRouter);
+
+// Everything below requires a valid JWT.
+app.use(auth);
 app.use(ProjectRouter);
 app.use(TransactionRouter);
 app.use(MemberRouter);
 app.use(emailRouter);
-app.use(ownerRouter);
-app.use(registerUser);
-app.use(authUser);
 app.use(TaskRouter);
 app.use(AiRouter);
 

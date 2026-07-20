@@ -97,6 +97,17 @@ const updateStatus = async (taskId, newStatus) => {
   }
 };
 
+// Add a comment to a task and return the updated task.
+const addComment = async (taskId, comment) => {
+  const task = await TaskModel.findById(taskId);
+  if (!task) {
+    throw new Error("Task not found");
+  }
+  task.comments.push(comment);
+  await task.save();
+  return task;
+};
+
 module.exports = {
   createTask,
   getAllTasks,
@@ -104,4 +115,5 @@ module.exports = {
   updateTaskById,
   deleteTaskById,
   updateStatus,
+  addComment,
 };

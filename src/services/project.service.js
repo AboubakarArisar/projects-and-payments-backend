@@ -1,4 +1,5 @@
 const ProjectModel = require("../models/Project.model");
+const TaskModel = require("../models/task.model");
 
 // Create a new project
 const createProject = async (
@@ -78,6 +79,9 @@ const deleteProjectById = async (projectId) => {
     if (!deletedProject) {
       throw new Error("Project not found");
     }
+
+    // Cascade: remove the project's tasks so none are left orphaned.
+    await TaskModel.deleteMany({ project: projectId });
 
     return { message: "Project deleted successfully" };
   } catch (error) {

@@ -1,4 +1,5 @@
 const taskServices = require("../services/task.service");
+const User = require("../models/user.model");
 
 // Controller for creating a new Task
 const createTask = async (req, res) => {
@@ -101,6 +102,30 @@ const updateStatus = async (req, res) => {
   }
 };
 
+// Controller for adding a comment to a task (author = the logged-in user)
+const addComment = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const { text } = req.body;
+    if (!text || !text.trim()) {
+      return res.status(400).json({ error: "text is required" });
+    }
+    const user = await User.findById(req.userId);
+    const task = await taskServices.addComment(taskId, {
+      author: user?.username || "Unknown",
+      text: text.trim(),
+    });
+    res.status(201).json(task);
+  } catch (error) {
+    console.error(error);
+    if (error.message === "Task not found") {
+      res.status(404).json({ error: "Task not found" });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+};
+
 module.exports = {
   createTask,
   getAllTasks,
@@ -108,4 +133,5 @@ module.exports = {
   updateTaskById,
   deleteTaskById,
   updateStatus,
+  addComment,
 };

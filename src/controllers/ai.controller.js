@@ -26,11 +26,11 @@ const analyzeRequirements = async (req, res) => {
 // Feature 2 — Proposal Generator
 const generateProposal = async (req, res) => {
   try {
-    const { text } = req.body;
+    const { text, tone } = req.body;
     if (!text || !text.trim()) {
       return res.status(400).json({ error: "text is required" });
     }
-    res.json(await aiServices.generateProposal(text));
+    res.json(await aiServices.generateProposal(text, tone));
   } catch (error) {
     handle(res, error, "Failed to generate proposal");
   }

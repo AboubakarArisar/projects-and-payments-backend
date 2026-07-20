@@ -64,11 +64,12 @@ const analyzeRequirements = async (text) => {
 };
 
 // Feature 2 — Proposal Generator
-const generateProposal = async (text) => {
+const generateProposal = async (text, tone = "Professional") => {
   const systemPrompt =
-    "You are a freelancer writing a professional client proposal from a project brief " +
-    "or requirements. Be confident and concrete but do not invent a real price — use a " +
-    "clear placeholder in pricingPlaceholder (e.g. '$X for Y'). Keep each section tight.";
+    `You are a freelancer writing a ${tone.toLowerCase()} client proposal from a project ` +
+    "brief or requirements. Match that tone throughout. Be confident and concrete but do " +
+    "not invent a real price — use a clear placeholder in pricingPlaceholder (e.g. '$X for " +
+    "Y'). Keep each section tight.";
 
   const responseSchema = {
     type: Type.OBJECT,

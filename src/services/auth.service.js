@@ -33,7 +33,9 @@ const loginUser = async ({ email, password }) => {
       expiresIn: "1h",
     });
 
-    return { token, user };
+    // Never return the password hash to the client.
+    const { password: _pw, ...safeUser } = user.toObject();
+    return { token, user: safeUser };
   } catch (error) {
     throw error;
   }
