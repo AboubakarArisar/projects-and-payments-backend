@@ -13,6 +13,7 @@ const ownerRouter = require("./routes/owner.route");
 const registerUser = require("./routes/user.route");
 const authUser = require("./routes/auth.route");
 const TaskRouter = require("./routes/task.route");
+const AiRouter = require("./routes/ai.route");
 
 app.use(ProjectRouter);
 app.use(TransactionRouter);
@@ -22,5 +23,6 @@ app.use(ownerRouter);
 app.use(registerUser);
 app.use(authUser);
 app.use(TaskRouter);
+app.use(AiRouter);
 
 module.exports = app;
