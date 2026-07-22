@@ -30,7 +30,8 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "set NODE_ENV=DEVELOPMENT& nodemon src/server",
-    "prod": "set NODE_ENV=PRODUCTION& nodemon src/server"
+    "prod": "node src/server.js",
+    "build": "node -e \"console.log('No build step required')\""
   },
   "author": "",
   "license": "ISC"
