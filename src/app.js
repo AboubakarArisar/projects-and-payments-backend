@@ -16,6 +16,12 @@ const TaskRouter = require("./routes/task.route");
 const AiRouter = require("./routes/ai.route");
 const auth = require("./middlewares/auth");
 
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to the Projects Payment API" });
+});
+
+
+
 // Public routes — no token required (sign in / sign up / availability checks).
 app.use(authUser);
 app.use(registerUser);
