@@ -7,7 +7,7 @@ It was developed by **Abou Bakar** as an **ACT-AI Final Assignment Project**.
 ## Project Links
 
 - **Live Application:** https://trysteward.vercel.app/
-- **Backend API:** https://eldt-project-bcea9fba4bba.herokuapp.com/
+- **Backend API:** https://projects-and-payments-backend.onrender.com
 - **Frontend Repository:** https://github.com/AboubakarArisar/projects-and-payments
 - **Backend Repository:** https://github.com/AboubakarArisar/projects-and-payments-backend
 
