@@ -10,7 +10,8 @@ const getClient = () => {
   return client;
 };
 
-const MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// Alias, not a pinned version — Google retires dated model ids for new users.
+const MODEL = process.env.GEMINI_MODEL || "gemini-flash-latest";
 
 // Generic structured-output call. Gemini 2.5 Flash returns strict JSON matching
 // responseSchema, so we can JSON.parse directly — no scrubbing.
