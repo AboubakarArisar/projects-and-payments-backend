@@ -7,7 +7,10 @@ const handle = (res, error, message) => {
   if (error.message === "GEMINI_API_KEY is not set") {
     return res.status(503).json({ error: "AI is not configured" });
   }
-  res.status(500).json({ error: message });
+  // Pass Gemini's own status/message through — a blanket 500 hides quota,
+  // disabled-API and bad-key errors that are all fixable by the caller.
+  res.status(error.status >= 400 && error.status < 600 ? error.status : 500)
+    .json({ error: message, detail: error.message });
 };
 
 // Feature 1 — Client Requirement Analyzer
